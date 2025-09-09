@@ -24,7 +24,7 @@ embassy-usb = { version = "0.5.1", features = [ "defmt" ] }
 embassy-rp = { version = "0.8", features = ["defmt", "unstable-pac", "time-driver", "critical-section-impl", "rp2040"] }
 
 portable-atomic = { version = "1.5.1", features = ["critical-section"] }
-xinput-device = { git = "https://github.com/9names/xinput-device", branch = "dep-fixes2", version = "0.1.0", features = ["defmt"] }
+xinput-device = { git = "https://github.com/9names/xinput-device", branch = "ergonomics", version = "0.1.0", features = ["defmt"] }
 static_cell = "2.1.1"
 
 

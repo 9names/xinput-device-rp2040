@@ -87,53 +87,15 @@ async fn main(spawner: Spawner) {
 
     loop {
         let controller_state = XboxGamepad {
-            dpad_up: false,
-            dpad_down: false,
-            dpad_left: false,
-            dpad_right: false,
-            btn_start: false,
-            btn_back: false,
-            btn_left_thumb: false,
-            btn_right_thumb: false,
-            btn_left_shoulder: false,
-            btn_right_shoulder: false,
-            btn_guide: false,
             btn_a: false,
-            btn_b: false,
-            btn_x: false,
-            btn_y: false,
-            trigger_left: i8::MAX,
-            trigger_right: i8::MAX,
-            thumb_left_x: 0,
-            thumb_left_y: 0,
-            thumb_right_x: 0,
-            thumb_right_y: 0,
+            ..Default::default()
         };
         CONTROLLER_STATE[0].send_xinput(controller_state.into());
         Timer::after_secs(1).await;
 
         let controller_state = XboxGamepad {
-            dpad_up: false,
-            dpad_down: false,
-            dpad_left: false,
-            dpad_right: false,
-            btn_start: false,
-            btn_back: false,
-            btn_left_thumb: false,
-            btn_right_thumb: false,
-            btn_left_shoulder: false,
-            btn_right_shoulder: false,
-            btn_guide: false,
             btn_a: true,
-            btn_b: false,
-            btn_x: false,
-            btn_y: false,
-            trigger_left: i8::MAX,
-            trigger_right: i8::MAX,
-            thumb_left_x: 0,
-            thumb_left_y: 0,
-            thumb_right_x: 0,
-            thumb_right_y: 0,
+            ..Default::default()
         };
         CONTROLLER_STATE[0].send_xinput(controller_state.into());
         Timer::after_secs(1).await;
