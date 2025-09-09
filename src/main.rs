@@ -3,19 +3,14 @@
 
 use defmt::*;
 use embassy_executor::Spawner;
-use embassy_rp::bind_interrupts;
-use embassy_rp::gpio;
-use embassy_rp::peripherals::USB;
-use embassy_rp::usb::{Driver, Instance, InterruptHandler};
+use embassy_rp::{bind_interrupts, gpio, peripherals::USB, usb::InterruptHandler};
 use embassy_time::Timer;
-use embassy_usb::driver::EndpointError;
-use embassy_usb::{Builder, Config};
 use gpio::{Level, Output};
 use static_cell::StaticCell;
-use xinput_device::controller::XboxGamepad;
-use xinput_device::xinput;
-use xinput_device::xinput::ControllerData;
-use xinput_device::xinput::XInput;
+use xinput_device::{
+    controller::XboxGamepad,
+    xinput::{self, XInput},
+};
 use {defmt_rtt as _, panic_probe as _};
 
 const CONTROLLER_STATE_INIT: xinput::State = xinput::State::new();
@@ -34,7 +29,7 @@ async fn usb_task(mut usb: UsbDevice) -> ! {
 }
 
 #[embassy_executor::task]
-async fn xinput_task(mut xinput_device: XInput<'static, UsbDriver>) -> ! {
+async fn xinput_task(xinput_device: XInput<'static, UsbDriver>) -> ! {
     xinput_device.run().await
 }
 
@@ -42,7 +37,7 @@ async fn xinput_task(mut xinput_device: XInput<'static, UsbDriver>) -> ! {
 async fn main(spawner: Spawner) {
     info!("Program start");
     let p = embassy_rp::init(Default::default());
-    let mut led = Output::new(p.PIN_25, Level::Low);
+    let _led = Output::new(p.PIN_25, Level::Low);
 
     let driver = embassy_rp::usb::Driver::new(p.USB, Irqs);
 
@@ -84,11 +79,11 @@ async fn main(spawner: Spawner) {
     };
     builder.handler(SERIAL_NUMBER_HANDLER.init(x));
 
-    let mut controller_0 = XInput::new_wireless(&mut builder, &CONTROLLER_STATE[0], false);
+    let controller_0 = XInput::new_wireless(&mut builder, &CONTROLLER_STATE[0], false);
 
     let usb = builder.build();
-    let usb_task_token = spawner.spawn(usb_task(usb));
-    let xinput_task_token = spawner.spawn(xinput_task(controller_0));
+    let _usb_task_token = spawner.spawn(usb_task(usb));
+    let _xinput_task_token = spawner.spawn(xinput_task(controller_0));
 
     loop {
         let controller_state = XboxGamepad {
