@@ -33,6 +33,11 @@ async fn usb_task(mut usb: UsbDevice) -> ! {
     usb.run().await
 }
 
+#[embassy_executor::task]
+async fn xinput_task(mut xinput_device: XInput<'static, UsbDriver>) -> ! {
+    xinput_device.run().await
+}
+
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     info!("Program start");
@@ -79,10 +84,11 @@ async fn main(spawner: Spawner) {
     };
     builder.handler(SERIAL_NUMBER_HANDLER.init(x));
 
-    let mut c0 = XInput::new_wireless(&mut builder, &CONTROLLER_STATE[0], false);
+    let mut controller_0 = XInput::new_wireless(&mut builder, &CONTROLLER_STATE[0], false);
 
     let usb = builder.build();
     let usb_task_token = spawner.spawn(usb_task(usb));
+    let xinput_task_token = spawner.spawn(xinput_task(controller_0));
 
     loop {
         let controller_state = XboxGamepad {
